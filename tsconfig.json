@@ -1,0 +1,20 @@
+// tsconfig.json
+{
+    "compilerOptions": {
+      "target": "ESNext",
+      "module": "ESNext",
+      "moduleResolution": "bundler", // or "node" (see below)
+      "jsx": "react-jsx",
+      "declaration": true,
+      "emitDeclarationOnly": false,
+      "allowSyntheticDefaultImports": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "strict": true,
+      "outDir": "dist",
+      "baseUrl": ".", // optional but recommended
+      "types": ["react", "node"]
+    },
+    "include": ["src"]
+  }
+  
