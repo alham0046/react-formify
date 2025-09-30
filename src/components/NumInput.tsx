@@ -1,8 +1,9 @@
-import React, { memo } from 'react'
+import React, { memo, useEffect, useRef } from 'react'
 // import { useInputStore } from '../../../Hooks/useInputStore'
 import InputTemplate from './InputTemplate'
 import { useInputStore } from 'src/hooks/useInputStore'
 import { FullInputProps, InputProps } from 'src/typeDeclaration/inputProps';
+import { getNestedValue } from 'src/Utils/inputStoreUtils';
 // import InputTemplate from './InputTemplate'
 
 // interface FullNumInputProps {
@@ -22,32 +23,71 @@ import { FullInputProps, InputProps } from 'src/typeDeclaration/inputProps';
 
 // type NumInputProps = Omit<FullNumInputProps, "isArrayObject" | "arrayData" | "onInputChange">;
 
-const NumInput: React.FC<InputProps> = ({ placeholder, containerStyles, inputStyles, placeholderStyles, onChange = () => { }, initialValue = "", name, ...props }) => {
+interface NumInputProps extends InputProps {
+    stringify?: boolean
+}
+
+const NumInput: React.FC<NumInputProps> = ({
+    placeholder,
+    onEnterPress = () => { },
+    containerStyles,
+    stringify = false,
+    privacy = false,
+    maxLength,
+    inputStyles,
+    placeholderStyles,
+    onChange = () => { },
+    initialValue = "",
+    name,
+    ...props
+}) => {
     const value = useInputStore(
         (state) => {
             if ((props as FullInputProps).isArrayObject) {
                 const arrData = (props as FullInputProps).arrayData!
                 return (
-                    state.inputData[arrData.arrayName]?.[arrData.arrayIndex]?.[name] ?? ""
+                    state.inputData[arrData.arrayName]?.[arrData.arrayIndex]?.[name!] ?? ""
                 )
             }
-            return state.inputData[name] ?? ""
+            return getNestedValue(state.inputData, name!) ?? ""
+            // return state.inputData[name] ?? ""
         }
     )
-    const handleChange = (e:React.ChangeEvent<HTMLInputElement> ) => {
+    const stringValidation = (data: number) => {
+        if (!stringify) {
+            return data
+        }
+        else {
+            return data.toString()
+        }
+    }
+    const prevValueRef = useRef(value)
+    useEffect(() => {
+        // console.log('the value of value is', value)
+        if (value !== prevValueRef.current) {
+            prevValueRef.current = value
+            if (value !== "" && !isNaN(value)) {
+                onChange(Number(value), null)  // Pass null as no event.data
+            }
+        }
+    }, [value])
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const inputVal = e.target.value
         // console.log('the number value is', inputVal)
-        const newValue = inputVal === "" ? "" : Number(inputVal)
-        onChange(newValue);
-        (props as FullInputProps).onInputChange(name, newValue)
+        const newValue = inputVal === "" ? "" : stringValidation(Number(inputVal))
+        const nativeEvent = e.nativeEvent as unknown as InputEvent; // Type assertion to InputEvent
+        onChange(newValue, nativeEvent.data);
+        (props as FullInputProps).onInputChange(name!, newValue)
     }
     return (
         <InputTemplate
-            name={name}
+            name={name!}
             value={value}
             handleChange={handleChange}
+            maxLength={maxLength}
+            onEnterPress={onEnterPress}
             placeholder={placeholder}
-            type={"number"}
+            type={privacy ? 'password' : 'number'}
             containerStyles={containerStyles}
             inputStyles={inputStyles}
             placeholderStyles={placeholderStyles}

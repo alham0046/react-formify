@@ -3,6 +3,7 @@ import { useInputStore } from '../hooks/useInputStore';
 import { shallow } from 'zustand/shallow';
 import { camelCase } from 'src/functions/camelCase';
 import { getDynamic } from 'src/functions/makeDynamic';
+import { isEmptyArray } from 'src/functions/dataTypesValidation';
 
 interface ArrayInputProps {
     children: React.ReactNode;
@@ -21,6 +22,7 @@ const ArrayInput: FC<ArrayInputProps> = ({ children, name, data = [], containerS
     const inputData = useInputStore((state) => state.inputData[name]);
     
     useEffect(() => {
+        if (isEmptyArray(inputData)) return
         if (React.Children.count(children) !== inputData.length) {
             alert('Elements inside Array Input do not match data provided initially');
         }
@@ -51,6 +53,7 @@ const ArrayInput: FC<ArrayInputProps> = ({ children, name, data = [], containerS
                         if (React.isValidElement(child) && isValidChild) {
                             return React.cloneElement(child as React.ReactElement<InputChildProps>, {
                                 onInputChange: (field: string, input: any) => handleArrayInput(index, field, input),
+                                name : modifiedName,
                                 isArrayObject: true,
                                 arrayData: { arrayName: name, arrayItem: item, arrayIndex: index },
                                 placeholder

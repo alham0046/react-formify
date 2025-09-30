@@ -10,7 +10,7 @@ interface InputStore {
   inputData: InputData;
   setInputValue: (key: string, value: any) => void;
   setInitialInputData : (data : InputData) => void
-  resetInput: (key : string[] | string) => void;
+  resetInput: (key? : string[] | string) => void;
 }
 
 export const useInputStore = create<InputStore>()(

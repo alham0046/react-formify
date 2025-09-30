@@ -11,10 +11,11 @@
     "scripts": {
         "build:css": "npx @tailwindcss/cli -i ./src/styles.css -o ./dist/styles.css --minify",
         "build": "npm run build:css && tsup",
-        "dev": "tsup --watch"
+        "dev": "tsup --watch",
+        "prepare": "npm run build",
+        "prepublishOnly": "npm run build"
     },
     "peerDependencies": {
-        "date-fns": ">=2.30.0",
         "react": ">=18.3.1",
         "react-datepicker": ">=4.24.0",
         "react-dom": ">=18.0.0",

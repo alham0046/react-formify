@@ -1,6 +1,7 @@
 export const camelCase = (str: string) => {
     if (str == '_id') return str
-    return str
+    const lowerStr = str.toLowerCase();
+    return lowerStr
         .replace(/[^a-zA-Z0-9]+(.)/g, (match, chr) => chr.toUpperCase())
         .replace(/^[A-Z]/, (match) => match.toLowerCase());
 }

@@ -1,72 +1,89 @@
-import React, { FC, memo, useCallback } from 'react';
+import React, { FC, memo, useCallback, useEffect, useRef } from 'react';
 import { shallow } from "zustand/shallow";
 import { camelCase } from 'src/functions/camelCase';
 import { useInputStore } from 'src/hooks/useInputStore';
+import InputTemplate from './InputTemplate';
+import { FullInputProps, InputProps } from 'src/typeDeclaration/inputProps';
+import { getNestedValue } from 'src/Utils/inputStoreUtils';
 
-interface FullStrInputProps  {
-    placeholder: string;
-    containerStyles?: string;
-    inputStyles?: string;
-    placeholderStyles?: string;
-    initialValue?: string;
-    name?: string | undefined;
-    isArrayObject?: boolean;
-    arrayData?: {
-        arrayName: string;
-        arrayIndex: number;
-    };
-    onInputChange: (name: string, value: string) => void;
-}
+// interface FullStrInputProps  {
+//     placeholder: string;
+//     containerStyles?: string;
+//     inputStyles?: string;
+//     placeholderStyles?: string;
+//     initialValue?: string;
+//     name: string;
+//     isArrayObject?: boolean;
+//     arrayData?: {
+//         arrayName: string;
+//         arrayIndex: number;
+//     };
+//     onInputChange: (name: string, value: string) => void;
+// }
 
-type StrInputProps = Omit<FullStrInputProps, "isArrayObject" | "arrayData" | "onInputChange">;
+// type StrInputProps = Omit<FullStrInputProps, "isArrayObject" | "arrayData" | "onInputChange">;
 
 
-const StrInput: FC<StrInputProps> = ({
+const StrInput: FC<InputProps> = ({
     placeholder,
     containerStyles = "",
+    onEnterPress = () => { },
+    maxLength,
+    privacy = false,
     inputStyles,
     placeholderStyles,
+    onChange = () => { },
     initialValue = "",
-    name = undefined,
+    name,
     ...props
 }) => {
-    // const getInternal = (): Pick<FullStrInputProps, 'isArrayObject' | 'arrayData' | 'onInputChange'> => props as any;
-    const modifiedName: string = name || camelCase(placeholder);
-    // const internalProps = props as Pick<FullStrInputProps, 'isArrayObject' | 'arrayData' | 'onInputChange'>;
 
     const value: string = useInputStore(
         (state) => {
-            if ((props as FullStrInputProps).isArrayObject) {
-                const arrData = (props as FullStrInputProps).arrayData!;
+            if ((props as FullInputProps).isArrayObject) {
+                const arrData = (props as FullInputProps).arrayData!;
                 return (
-                    state.inputData[arrData.arrayName]?.[arrData.arrayIndex]?.[modifiedName] ?? ""
+                    state.inputData[arrData.arrayName]?.[arrData.arrayIndex]?.[name!] ?? ""
                 );
             }
-            return state.inputData[modifiedName] ?? "";
+            return getNestedValue(state.inputData, name!) ?? ""
+            // return state.inputData[name] ?? "";
         }
     );
 
-    const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        (props as FullStrInputProps).onInputChange(modifiedName, e.target.value);
-    }, [modifiedName]);
+    const prevValueRef = useRef(value)
+
+    useEffect(() => {
+        if (value !== prevValueRef.current) {
+            prevValueRef.current = value
+            if (value !== "") {
+                onChange(value, null)  // Pass null as no event.data
+            }
+        }
+    }, [value])
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const changedValue = e.target.value;
+        const nativeEvent = e.nativeEvent as unknown as InputEvent; // Type assertion to InputEvent
+        onChange(changedValue, nativeEvent.data);
+        (props as FullInputProps).onInputChange(name!, e.target.value);
+    }
 
     return (
         <>
-            <input
-                type="text"
-                id={`floating_input_${modifiedName}`}
+            <InputTemplate
+                name={name!}
                 value={value}
-                onChange={handleChange}
-                className={`py-2 px-2 border-2 w-full rounded-lg bg-transparent appearance-none peer ${inputStyles}`}
-                placeholder=" "
-                required
+                handleChange={handleChange}
+                onEnterPress={ onEnterPress }
+                maxLength={maxLength}
+                placeholder={placeholder}
+                type={privacy ? 'password' : 'text'}
+                containerStyles={containerStyles}
+                inputStyles={inputStyles}
+                placeholderStyles={placeholderStyles}
+                {...props}
             />
-            <label
-                htmlFor={`floating_input_${modifiedName}`}
-                className={`absolute left-5 px-1 bg-gray-400 duration-300 transform -translate-y-6 scale-75 top-2 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-[85%] peer-focus:-translate-y-6 ${placeholderStyles}`}
-            >
-                {placeholder}
-            </label>
         </>
     );
 };

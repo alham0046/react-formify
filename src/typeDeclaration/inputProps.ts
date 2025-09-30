@@ -1,11 +1,14 @@
 export interface FullInputProps {
     placeholder: string;
     containerStyles?: string;
+    maxLength?: number
     inputStyles?: string;
     placeholderStyles?: string;
     initialValue?: string;
-    name: string;
-    onChange?: (value : string | number) => {}
+    privacy?: boolean
+    onEnterPress?: (data: any) => {}
+    name?: string;
+    onChange?: (value: string | number, data: string | null) => {}
     isArrayObject?: boolean;
     arrayData?: {
         arrayName: string;
