@@ -30,9 +30,15 @@ const flattenChildren = (children: ReactNode): React.ReactElement[] => {
 
     if (child.type === React.Fragment && child.props.children) {
       result.push(...flattenChildren(child.props.children));
-    } else {
-      result.push(child);
+      return
     }
+    if (typeof child.type === 'function') {
+      // Call the component to get its rendered output
+      const rendered = (child.type as any)(child.props);
+      result.push(...flattenChildren(rendered));
+      return;
+    }
+    result.push(child)
   });
 
   return result;
@@ -155,3 +161,25 @@ const InputContainer: FC<InputContainerProps> = ({ children, inputContainerStyle
 }
 
 export default memo(InputContainer)
+
+
+
+
+
+
+// ✅ Helper to flatten fragments
+// const flattenChildren = (children: ReactNode): React.ReactElement[] => {
+//   const result: React.ReactElement[] = [];
+
+//   React.Children.forEach(children, (child) => {
+//     if (!React.isValidElement<InputChildProps>(child)) return;
+
+//     if (child.type === React.Fragment && child.props.children) {
+//       result.push(...flattenChildren(child.props.children));
+//     } else {
+//       result.push(child);
+//     }
+//   });
+
+//   return result;
+// };
