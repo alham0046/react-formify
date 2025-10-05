@@ -6,23 +6,6 @@ import InputTemplate from './InputTemplate';
 import { FullInputProps, InputProps } from 'src/typeDeclaration/inputProps';
 import { getNestedValue } from 'src/Utils/inputStoreUtils';
 
-// interface FullStrInputProps  {
-//     placeholder: string;
-//     containerStyles?: string;
-//     inputStyles?: string;
-//     placeholderStyles?: string;
-//     initialValue?: string;
-//     name: string;
-//     isArrayObject?: boolean;
-//     arrayData?: {
-//         arrayName: string;
-//         arrayIndex: number;
-//     };
-//     onInputChange: (name: string, value: string) => void;
-// }
-
-// type StrInputProps = Omit<FullStrInputProps, "isArrayObject" | "arrayData" | "onInputChange">;
-
 
 const StrInput: FC<InputProps> = ({
     placeholder,
@@ -37,11 +20,11 @@ const StrInput: FC<InputProps> = ({
     name,
     ...props
 }) => {
-
+    const fullProps = props as FullInputProps
     const value: string = useInputStore(
         (state) => {
-            if ((props as FullInputProps).isArrayObject) {
-                const arrData = (props as FullInputProps).arrayData!;
+            if (fullProps.isArrayObject) {
+                const arrData = fullProps.arrayData!;
                 return (
                     state.inputData[arrData.arrayName]?.[arrData.arrayIndex]?.[name!] ?? ""
                 );
@@ -52,6 +35,17 @@ const StrInput: FC<InputProps> = ({
     );
 
     const prevValueRef = useRef(value)
+
+    const setInputValue = useInputStore((state) => state.setInputValue);
+    useEffect(() => {
+        // We only proceed if name is available and value is still empty
+        if (name && value === "") {
+            // This ensures we don't overwrite user input or existing state data
+            setInputValue(name, initialValue);
+        }
+        // Dependency array includes name and initialValue, and runs only once effectively
+        // since name and initialValue are stable for a given component instance.
+    }, [name, initialValue, setInputValue]);
 
     useEffect(() => {
         if (value !== prevValueRef.current) {
@@ -66,7 +60,7 @@ const StrInput: FC<InputProps> = ({
         const changedValue = e.target.value;
         const nativeEvent = e.nativeEvent as unknown as InputEvent; // Type assertion to InputEvent
         onChange(changedValue, nativeEvent.data);
-        (props as FullInputProps).onInputChange(name!, e.target.value);
+        fullProps.onInputChange(name!, e.target.value);
     }
 
     return (
@@ -75,7 +69,7 @@ const StrInput: FC<InputProps> = ({
                 name={name!}
                 value={value}
                 handleChange={handleChange}
-                onEnterPress={ onEnterPress }
+                onEnterPress={onEnterPress}
                 maxLength={maxLength}
                 placeholder={placeholder}
                 type={privacy ? 'password' : 'text'}
@@ -89,3 +83,83 @@ const StrInput: FC<InputProps> = ({
 };
 
 export default memo(StrInput);
+
+
+
+
+
+
+// import React, { FC, memo, useCallback, useEffect, useRef } from 'react';
+// import { shallow } from "zustand/shallow";
+// import { camelCase } from 'src/functions/camelCase';
+// import { useInputStore } from 'src/hooks/useInputStore';
+// import InputTemplate from './InputTemplate';
+// import { FullInputProps, InputProps } from 'src/typeDeclaration/inputProps';
+// import { getNestedValue } from 'src/Utils/inputStoreUtils';
+
+
+// const StrInput: FC<InputProps> = ({
+//     placeholder,
+//     containerStyles = "",
+//     onEnterPress = () => { },
+//     maxLength,
+//     privacy = false,
+//     inputStyles,
+//     placeholderStyles,
+//     onChange = () => { },
+//     initialValue = "",
+//     name,
+//     ...props
+// }) => {
+
+//     const value: string = useInputStore(
+//         (state) => {
+//             if ((props as FullInputProps).isArrayObject) {
+//                 const arrData = (props as FullInputProps).arrayData!;
+//                 return (
+//                     state.inputData[arrData.arrayName]?.[arrData.arrayIndex]?.[name!] ?? ""
+//                 );
+//             }
+//             return getNestedValue(state.inputData, name!) ?? ""
+//             // return state.inputData[name] ?? "";
+//         }
+//     );
+
+//     const prevValueRef = useRef(value)
+
+//     useEffect(() => {
+//         if (value !== prevValueRef.current) {
+//             prevValueRef.current = value
+//             if (value !== "") {
+//                 onChange(value, null)  // Pass null as no event.data
+//             }
+//         }
+//     }, [value])
+
+//     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//         const changedValue = e.target.value;
+//         const nativeEvent = e.nativeEvent as unknown as InputEvent; // Type assertion to InputEvent
+//         onChange(changedValue, nativeEvent.data);
+//         (props as FullInputProps).onInputChange(name!, e.target.value);
+//     }
+
+//     return (
+//         <>
+//             <InputTemplate
+//                 name={name!}
+//                 value={value}
+//                 handleChange={handleChange}
+//                 onEnterPress={ onEnterPress }
+//                 maxLength={maxLength}
+//                 placeholder={placeholder}
+//                 type={privacy ? 'password' : 'text'}
+//                 containerStyles={containerStyles}
+//                 inputStyles={inputStyles}
+//                 placeholderStyles={placeholderStyles}
+//                 {...props}
+//             />
+//         </>
+//     );
+// };
+
+// export default memo(StrInput);
