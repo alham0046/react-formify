@@ -47,7 +47,9 @@ const ObjectContainer: FC<ObjContainerProps> = ({
                     const childProps = child.props
                     const modifiedName = (childProps.name || childProps.placeholder) ? childProps.name || camelCase(childProps.placeholder) : undefined
                     const changedName = `${objName}.${modifiedName}`
-                    handleInitialValue(changedName, childProps.initialValue,setInputValue, (childType as any).type.name)
+                    if (childProps.placeholder) {
+                        handleInitialValue(changedName, childProps.initialValue,setInputValue, (childType as any).type.name)
+                    }
                     // console.log('the value of chiprops is', changedName, modifiedName)
                     if (React.isValidElement(child)) {
                         return React.cloneElement(child, {

@@ -72,7 +72,9 @@ const InputContainer: FC<InputContainerProps> = ({ children, inputContainerStyle
           if (isDOMElement) return child;
           const childProps = child.props
           const modifiedName = (childProps.name || childProps.placeholder) ? childProps.name || camelCase(childProps.placeholder) : undefined
-          handleInitialValue(modifiedName, childProps.initialValue, setInputValue, (childType as any).type.name)
+          if (childProps.placeholder) {
+            handleInitialValue(modifiedName, childProps.initialValue, setInputValue, (childType as any).type.name)
+          }
           if (React.isValidElement(child)) {
             return React.cloneElement(child, {
               key: child.key ?? index,
