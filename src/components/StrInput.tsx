@@ -36,17 +36,6 @@ const StrInput: FC<InputProps> = ({
 
     const prevValueRef = useRef(value)
 
-    const setInputValue = useInputStore((state) => state.setInputValue);
-    useEffect(() => {
-        // We only proceed if name is available and value is still empty
-        if (name && value === "") {
-            // This ensures we don't overwrite user input or existing state data
-            setInputValue(name, initialValue);
-        }
-        // Dependency array includes name and initialValue, and runs only once effectively
-        // since name and initialValue are stable for a given component instance.
-    }, [name, initialValue, setInputValue]);
-
     useEffect(() => {
         if (value !== prevValueRef.current) {
             prevValueRef.current = value

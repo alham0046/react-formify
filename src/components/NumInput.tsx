@@ -41,10 +41,11 @@ const NumInput: React.FC<NumInputProps> = ({
     name,
     ...props
 }) => {
+    const fullProps = props as FullInputProps
     const value = useInputStore(
         (state) => {
-            if ((props as FullInputProps).isArrayObject) {
-                const arrData = (props as FullInputProps).arrayData!
+            if (fullProps.isArrayObject) {
+                const arrData = fullProps.arrayData!
                 return (
                     state.inputData[arrData.arrayName]?.[arrData.arrayIndex]?.[name!] ?? ""
                 )
@@ -77,7 +78,7 @@ const NumInput: React.FC<NumInputProps> = ({
         const newValue = inputVal === "" ? "" : stringValidation(Number(inputVal))
         const nativeEvent = e.nativeEvent as unknown as InputEvent; // Type assertion to InputEvent
         onChange(newValue, nativeEvent.data);
-        (props as FullInputProps).onInputChange(name!, newValue)
+        fullProps.onInputChange(name!, newValue)
     }
     return (
         <InputTemplate

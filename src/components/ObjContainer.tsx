@@ -13,7 +13,7 @@ interface FullProps {
 
 interface ObjContainerProps {
     objName: string
-    inputContainerStyles : string
+    inputContainerStyles?: string
     children: ReactNode
 }
 
