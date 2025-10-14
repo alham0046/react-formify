@@ -9,3 +9,9 @@ Please ensure Tailwind is installed in your project.
 ```bash
 npm install -D tailwindcss postcss autoprefixer
 npx tailwindcss init
+
+### Install libsodium-wrappers-sumo (Only if end-to-end encryption is required)
+
+```bash
+npm install libsodium-wrappers-sumo
+npm install @types/libsodium-wrappers-sumo
