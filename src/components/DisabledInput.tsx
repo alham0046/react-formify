@@ -5,13 +5,14 @@ import { camelCase } from 'src/functions/camelCase';
 import InputTemplate from './InputTemplate';
 import { getNestedValue } from 'src/Utils/inputStoreUtils';
 
-interface DisabledInputProps {
+interface FullDisabledProps {
     initialValue?: string;
     containerStyles?: string;
     inputStyles?: string;
     placeholderStyles?: string;
     placeholder: string;
-    name: string;
+    onChange?: (value: string | number, data: string | null) => {}
+    name?: string;
     isArrayObject?: boolean;
     arrayData?: {
         arrayName: string;
@@ -20,38 +21,57 @@ interface DisabledInputProps {
     onInputChange: (name: string, value: string) => void;
 }
 
+type DisabledInputProps = Omit<FullDisabledProps, "isArrayObject" | "arrayData" | "onInputChange">;
+// interface DisabledInputProps {
+//     initialValue?: string;
+//     containerStyles?: string;
+//     inputStyles?: string;
+//     placeholderStyles?: string;
+//     placeholder: string;
+//     name: string;
+//     isArrayObject?: boolean;
+//     arrayData?: {
+//         arrayName: string;
+//         arrayIndex: number;
+//     };
+//     onInputChange: (name: string, value: string) => void;
+// }
+
 const DisabledInput: FC<DisabledInputProps> = ({
     initialValue = "",
     containerStyles = "",
     placeholder,
+    onChange = () => { },
     inputStyles,
     placeholderStyles,
     name,
     ...props
 }) => {
-    const modifiedName: string = name || camelCase(placeholder);
+    const fullProps = props as FullDisabledProps
+    // const modifiedName: string = name || camelCase(placeholder);
 
     const value: string = useInputStore(
         (state) => {
-            if (props.isArrayObject) {
-                const arrData = props.arrayData!;
+            if (fullProps.isArrayObject) {
+                const arrData = fullProps.arrayData!;
                 return (
-                    state.inputData[arrData.arrayName]?.[arrData.arrayIndex]?.[modifiedName] ?? initialValue
+                    state.inputData[arrData.arrayName]?.[arrData.arrayIndex]?.[name!] ?? initialValue
                 );
             }
-            return getNestedValue(state.inputData, modifiedName) ?? initialValue;
+            return getNestedValue(state.inputData, name!) ?? initialValue;
             // return state.inputData[modifiedName] ?? initialValue;
         }
     );
 
     useEffect(() => {
-        props.onInputChange(modifiedName, value);
-    }, [modifiedName, value]);
+        onChange(value, null)
+        fullProps.onInputChange(name!, value);
+    }, [name, value]);
 
     return (
         <>
             <InputTemplate
-                name={name}
+                name={name!}
                 value={value}
                 placeholder={placeholder}
                 disabled={true}

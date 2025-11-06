@@ -52,7 +52,7 @@ const InputContainer: FC<InputContainerProps> = ({ children, inputContainerStyle
         }
         current = current.parentElement;
       }
-      console.log('the bg color is', backgroundColor)
+      // console.log('the bg color is', backgroundColor)
       if (backgroundColor == 'rgba(0, 0, 0, 0)' || backgroundColor == '') setBgColor('white')
       else setBgColor(backgroundColor)
       // setBgColor(backgroundColor ?? 'white')
