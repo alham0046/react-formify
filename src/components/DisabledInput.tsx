@@ -11,7 +11,7 @@ interface FullDisabledProps {
     inputStyles?: string;
     placeholderStyles?: string;
     placeholder: string;
-    onChange?: (value: string | number, data: string | null) => {}
+    onChange?: (value: string | number, data: string | null) => void
     name?: string;
     isArrayObject?: boolean;
     arrayData?: {

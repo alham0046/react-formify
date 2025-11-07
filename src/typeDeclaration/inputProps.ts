@@ -6,9 +6,10 @@ export interface FullInputProps {
     placeholderStyles?: string;
     initialValue?: string;
     privacy?: boolean
-    onEnterPress?: (data: any) => {}
+    onEnterPress?: (currentValue: string, allData: any) => void
+    onBlur?: (currentValue: string, allData: any) => void
     name?: string;
-    onChange?: (value: string | number, data: string | null) => {}
+    onChange?: (value: string | number, data: string | null) => void
     isArrayObject?: boolean;
     arrayData?: {
         arrayName: string;

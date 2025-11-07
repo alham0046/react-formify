@@ -30,6 +30,7 @@ interface NumInputProps extends InputProps {
 const NumInput: React.FC<NumInputProps> = ({
     placeholder,
     onEnterPress = () => { },
+    onBlur = () => { },
     containerStyles,
     stringify = false,
     privacy = false,
@@ -86,6 +87,7 @@ const NumInput: React.FC<NumInputProps> = ({
             value={value}
             handleChange={handleChange}
             maxLength={maxLength}
+            onBlur={onBlur}
             onEnterPress={onEnterPress}
             placeholder={placeholder}
             type={privacy ? 'password' : 'number'}

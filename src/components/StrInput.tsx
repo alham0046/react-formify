@@ -11,6 +11,7 @@ const StrInput: FC<InputProps> = ({
     placeholder,
     containerStyles = "",
     onEnterPress = () => { },
+    onBlur = () => { },
     maxLength,
     privacy = false,
     inputStyles,
@@ -59,6 +60,7 @@ const StrInput: FC<InputProps> = ({
                 value={value}
                 handleChange={handleChange}
                 onEnterPress={onEnterPress}
+                onBlur={onBlur}
                 maxLength={maxLength}
                 placeholder={placeholder}
                 type={privacy ? 'password' : 'text'}
