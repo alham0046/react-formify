@@ -6,8 +6,8 @@ interface FullTemplateProps {
     type: ComponentProps<'input'>['type']
     placeholder: string
     maxLength?: number
-    onBlur?: (currentValue: string, allData: any) => void
-    onEnterPress?: (currentValue: string, allData: any) => void
+    onBlur?: (args: { currentValue: string, allData: Record<string, any> }) => void
+    onEnterPress?: (args: { currentValue: string, allData: Record<string, any> }) => void
     disabled?: boolean
     value: string
     handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -51,12 +51,12 @@ const InputTemplate: React.FC<TemplateProps> = ({
     }
     const handleBlur = () => {
         const { inputData: data } = useInputStore.getState()
-        onBlur(value, data)
+        onBlur({currentValue : value, allData : data})
     }
     const handleKeyPresses = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             const { inputData: data } = useInputStore.getState()
-            onEnterPress(value, data)
+            onEnterPress({currentValue : value, allData : data})
         }
     }
     const [labelWidth, setLabelWidth] = useState<number | null>(null);
