@@ -1,5 +1,5 @@
 export const getDynamic = (str : string, item : any) => {
-    console.log("the value of str and item is")
+    // console.log("the value of str and item is")
     const match = str.match(/\$\{data\.([^\}]+)\}/);
     if (match) {
         const variable = match[1]; // Extract variable (host, name, etc.)

@@ -45,7 +45,7 @@ const PickDate: FC<PickDateProps> = ({ onDateSelect, dateStyles, id }) => {
     const handleDateChange = (date: Date | null): void => {
         if (date) {
             setStartDate(date);
-            console.log('the value of original date is', date);
+            // console.log('the value of original date is', date);
             onDateSelect(format(date, 'yyyy-MM-dd'));
         }
     };

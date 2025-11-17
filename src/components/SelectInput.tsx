@@ -70,7 +70,7 @@ const SelectInput: FC<SelectProps> = ({
             return options as SelectOption[]
         }
         const initialItem = initialLabel ? [{ label: initialLabel, value: initialValue }] : []
-        const newOption = (options as string[]).map((item) => ({ label: item, value: camelCase(item) }))
+        const newOption = (options as string[]).map((item) => ({ label: item, value: item }))
         return [...initialItem, ...newOption]
     }, [options])
 

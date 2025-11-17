@@ -70,7 +70,7 @@ const SubmitButton: React.FC<SubmitProps> = ({
   const handleSubmit = useCallback(() => {
     if (renderConfirmationModel) setOpenModal(true)
     const { inputData: data } = useInputStore.getState()
-    console.log('the submit is', data)
+    // console.log('the submit is', data)
     onClick && onClick({ data, resetForm })
     setModelData(data)
   }, [onClick])
