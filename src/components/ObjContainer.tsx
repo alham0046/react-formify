@@ -70,4 +70,13 @@ const ObjectContainer: FC<ObjContainerProps> = ({
 }
 
 
-export default memo(ObjectContainer)
+// 1. Export the memoized component
+const MemoizedObjectContainer = memo(ObjectContainer)
+
+// 2. Set the displayName on the exported component
+MemoizedObjectContainer.displayName = 'ObjectContainer';
+
+export default MemoizedObjectContainer;
+
+
+// export default memo(ObjectContainer)
