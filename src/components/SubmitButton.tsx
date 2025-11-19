@@ -101,7 +101,15 @@ const SubmitButton: React.FC<SubmitProps> = ({
   )
 }
 
-export default memo(SubmitButton)
+// 1. Export the memoized component
+const MemoizedSubmitButton = memo(SubmitButton)
+
+// 2. Set the displayName on the exported component
+MemoizedSubmitButton.displayName = 'SubmitButton';
+
+export default MemoizedSubmitButton;
+
+// export default memo(SubmitButton)
 
 
 
