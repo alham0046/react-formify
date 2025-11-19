@@ -99,4 +99,12 @@ const NumInput: React.FC<NumInputProps> = ({
     )
 }
 
-export default memo(NumInput)
+// 1. Export the memoized component
+const MemoizedNumInput = memo(NumInput)
+
+// 2. Set the displayName on the exported component
+MemoizedNumInput.displayName = 'NumInput';
+
+export default MemoizedNumInput;
+
+// export default memo(NumInput)

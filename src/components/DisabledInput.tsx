@@ -85,7 +85,15 @@ const DisabledInput: FC<DisabledInputProps> = ({
     );
 };
 
-export default memo(DisabledInput);
+// 1. Export the memoized component
+const MemoizedDisabledInput = memo(DisabledInput)
+
+// 2. Set the displayName on the exported component
+MemoizedDisabledInput.displayName = 'DisabledInput';
+
+export default MemoizedDisabledInput;
+
+// export default memo(DisabledInput);
 {/* <input
     type="text"
     id={`floating_input_${modifiedName}`}

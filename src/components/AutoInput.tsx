@@ -67,7 +67,15 @@ const AutoInput: React.FC<AutoInputProps> = ({ initialData, exclusionKeys, ...pr
     )
 }
 
-export default memo(AutoInput)
+// 1. Export the memoized component
+const MemoizedAutoInput = memo(AutoInput)
+
+// 2. Set the displayName on the exported component
+MemoizedAutoInput.displayName = 'AutoInput';
+
+export default MemoizedAutoInput;
+
+// export default memo(AutoInput)
 
 
 

@@ -73,7 +73,15 @@ const StrInput: FC<InputProps> = ({
     );
 };
 
-export default memo(StrInput);
+// 1. Export the memoized component
+const MemoizedStrInput = memo(StrInput)
+
+// 2. Set the displayName on the exported component
+MemoizedStrInput.displayName = 'StrInput';
+
+export default MemoizedStrInput;
+
+// export default memo(StrInput);
 
 
 

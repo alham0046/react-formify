@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo, useRef } from 'react';
+import React, { FC, memo, useEffect, useMemo, useRef } from 'react';
 import { camelCase } from 'src/functions/camelCase';
 import { useInputStore } from 'src/hooks/useInputStore';
 import { getNestedValue } from 'src/Utils/inputStoreUtils';
@@ -100,4 +100,12 @@ const SelectInput: FC<SelectProps> = ({
     );
 };
 
-export default React.memo(SelectInput);
+// 1. Export the memoized component
+const MemoizedSelectInput = memo(SelectInput)
+
+// 2. Set the displayName on the exported component
+MemoizedSelectInput.displayName = 'SelectInput';
+
+export default MemoizedSelectInput;
+
+// export default React.memo(SelectInput);
