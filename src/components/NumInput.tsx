@@ -34,6 +34,7 @@ const NumInput: React.FC<NumInputProps> = ({
     containerStyles,
     stringify = false,
     privacy = false,
+    disabled = false,
     maxLength,
     inputStyles,
     placeholderStyles,
@@ -91,6 +92,7 @@ const NumInput: React.FC<NumInputProps> = ({
             onEnterPress={onEnterPress}
             placeholder={placeholder}
             type={privacy ? 'password' : 'number'}
+            disabled={disabled}
             containerStyles={containerStyles}
             inputStyles={inputStyles}
             placeholderStyles={placeholderStyles}

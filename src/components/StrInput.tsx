@@ -14,6 +14,7 @@ const StrInput: FC<InputProps> = ({
     onBlur = () => { },
     maxLength,
     privacy = false,
+    disabled = false,
     inputStyles,
     placeholderStyles,
     onChange = () => { },
@@ -60,6 +61,7 @@ const StrInput: FC<InputProps> = ({
                 value={value}
                 handleChange={handleChange}
                 onEnterPress={onEnterPress}
+                disabled={disabled}
                 onBlur={onBlur}
                 maxLength={maxLength}
                 placeholder={placeholder}
