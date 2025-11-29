@@ -4,6 +4,7 @@ import InputTemplate from './InputTemplate'
 import { useInputStore } from 'src/hooks/useInputStore'
 import { FullInputProps, InputProps } from 'src/typeDeclaration/inputProps';
 import { getNestedValue } from 'src/Utils/inputStoreUtils';
+import { useComputedExpression } from 'src/hooks/useComputedExpression';
 // import InputTemplate from './InputTemplate'
 
 // interface FullNumInputProps {
@@ -35,6 +36,7 @@ const NumInput: React.FC<NumInputProps> = ({
     stringify = false,
     privacy = false,
     disabled = false,
+    hideElement = false,
     maxLength,
     inputStyles,
     placeholderStyles,
@@ -64,6 +66,11 @@ const NumInput: React.FC<NumInputProps> = ({
             return data.toString()
         }
     }
+
+    const disabledValue: boolean = useComputedExpression(disabled)
+
+    const hiddenValue: boolean = useComputedExpression(hideElement)
+
     const prevValueRef = useRef(value)
     useEffect(() => {
         // console.log('the value of value is', value)
@@ -92,7 +99,8 @@ const NumInput: React.FC<NumInputProps> = ({
             onEnterPress={onEnterPress}
             placeholder={placeholder}
             type={privacy ? 'password' : 'number'}
-            disabled={disabled}
+            disabled={disabledValue}
+            hideElement={hiddenValue}
             containerStyles={containerStyles}
             inputStyles={inputStyles}
             placeholderStyles={placeholderStyles}

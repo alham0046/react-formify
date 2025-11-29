@@ -8,14 +8,18 @@ interface InputData {
 
 interface InputStore {
   inputData: InputData;
+  currentInputKey: string | null;
+  setCurrentInputKey: (key: string | null) => void;
   setInputValue: (key: string, value: any) => void;
-  setInitialInputData : (data : InputData) => void
-  resetInput: (key? : string[] | string) => void;
+  setInitialInputData: (data: InputData) => void
+  resetInput: (key?: string[] | string) => void;
 }
 
 export const useInputStore = create<InputStore>()(
   subscribeWithSelector((set, get) => ({
     inputData: {},
+    currentInputKey: null,
+    setCurrentInputKey: (key) => set({ currentInputKey: key }),
     setInputValue: (key: string, value: any) =>
       set((state) => {
         const keys = key.split(".");
@@ -47,7 +51,7 @@ export const useInputStore = create<InputStore>()(
     resetInput: (keys) =>
       set((state) => {
         if (!keys) return { inputData: {} }
-  
+
         const newInputData = { ...state.inputData }
         if (isArray(keys)) {
           keys.forEach((key) => delete newInputData[key])

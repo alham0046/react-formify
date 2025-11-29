@@ -9,6 +9,7 @@ interface FullTemplateProps {
     onBlur?: (args: { currentValue: string, allData: Record<string, any> }) => void
     onEnterPress?: (args: { currentValue: string, allData: Record<string, any> }) => void
     disabled?: boolean
+    hideElement?: boolean
     value: string
     handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     containerStyles?: string
@@ -32,12 +33,14 @@ const InputTemplate: React.FC<TemplateProps> = ({
     onBlur = () => { },
     onEnterPress = () => { },
     disabled = false,
+    hideElement = false,
     handleChange = () => { },
     containerStyles = "",
     inputStyles = "",
     placeholderStyles = "",
     ...props
 }) => {
+    const setFocusInputKey = useInputStore((state) => state.setCurrentInputKey);
     const pattern = /border-(\d+|\[([^\]]+)\])/
     const match = inputStyles.match(pattern)
     const dynamicHeight = match ? (match[2] ? match[2] : `${match[1]}px`) : undefined;
@@ -65,9 +68,9 @@ const InputTemplate: React.FC<TemplateProps> = ({
         if (labelRef.current) {
             setLabelWidth(labelRef.current.offsetWidth);
         }
-    }, [value, placeholder]);
+    }, [value, placeholder, hideElement]);
     return (
-        <div className={`relative w-full group ${containerStyles}`}>
+        <div className={`relative w-full group ${containerStyles}`} onFocus={() => setFocusInputKey(name)}>
             {/* {console.log('thev valueof ', placeholder, type)} */}
             <input
                 type={type}

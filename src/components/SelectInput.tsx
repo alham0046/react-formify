@@ -3,6 +3,7 @@ import { camelCase } from 'src/functions/camelCase';
 import { useInputStore } from 'src/hooks/useInputStore';
 import { getNestedValue } from 'src/Utils/inputStoreUtils';
 import SelectTemplate from './SelectTemplate';
+import { useComputedExpression } from 'src/hooks/useComputedExpression';
 
 interface SelectOption {
     label: string;
@@ -15,6 +16,7 @@ interface FullInputProps {
     options: SelectOption[] | string[]
     initialValue?: string;
     initialLabel?: string
+    disabled?: boolean | string
     onChange?: (value: string) => void
     onInputChange: (name: string, value: string) => void
     inputStyles?: string
@@ -38,6 +40,7 @@ const SelectInput: FC<SelectProps> = ({
     placeholder,
     options,
     onChange = () => { },
+    disabled = false,
     initialLabel,
     initialValue = '',
     inputStyles = '',
@@ -55,6 +58,8 @@ const SelectInput: FC<SelectProps> = ({
         }
         return getNestedValue(state.inputData, name!) ?? '';
     });
+
+    const disabledValue: boolean = useComputedExpression(disabled)
 
     const prevValueRef = useRef(value);
 
@@ -90,6 +95,7 @@ const SelectInput: FC<SelectProps> = ({
                 value={value}
                 placeholder={placeholder}
                 options={refinedOption}
+                disabled={disabledValue}
                 onSelect={handleSelect}
                 inputStyles={inputStyles}
                 placeholderStyles={placeholderStyles}

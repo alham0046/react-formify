@@ -5,6 +5,7 @@ import { useInputStore } from 'src/hooks/useInputStore';
 import InputTemplate from './InputTemplate';
 import { FullInputProps, InputProps } from 'src/typeDeclaration/inputProps';
 import { getNestedValue } from 'src/Utils/inputStoreUtils';
+import { useComputedExpression } from 'src/hooks/useComputedExpression';
 
 
 const StrInput: FC<InputProps> = ({
@@ -15,6 +16,7 @@ const StrInput: FC<InputProps> = ({
     maxLength,
     privacy = false,
     disabled = false,
+    hideElement = false,
     inputStyles,
     placeholderStyles,
     onChange = () => { },
@@ -23,6 +25,7 @@ const StrInput: FC<InputProps> = ({
     ...props
 }) => {
     const fullProps = props as FullInputProps
+    
     const value: string = useInputStore(
         (state) => {
             if (fullProps.isArrayObject) {
@@ -35,6 +38,10 @@ const StrInput: FC<InputProps> = ({
             // return state.inputData[name] ?? "";
         }
     );
+
+    const disabledValue : boolean = useComputedExpression(disabled)
+
+    const hiddenValue : boolean = useComputedExpression(hideElement)
 
     const prevValueRef = useRef(value)
 
@@ -55,13 +62,14 @@ const StrInput: FC<InputProps> = ({
     }
 
     return (
-        <>
+        <div style={{ display: hiddenValue ? 'none' : 'block' }}>
             <InputTemplate
                 name={name!}
                 value={value}
                 handleChange={handleChange}
                 onEnterPress={onEnterPress}
-                disabled={disabled}
+                disabled={disabledValue}
+                hideElement={hiddenValue}
                 onBlur={onBlur}
                 maxLength={maxLength}
                 placeholder={placeholder}
@@ -71,7 +79,7 @@ const StrInput: FC<InputProps> = ({
                 placeholderStyles={placeholderStyles}
                 {...props}
             />
-        </>
+        </div>
     );
 };
 
