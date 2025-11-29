@@ -4,6 +4,7 @@ import { getDate } from 'src/functions/dateHelper';
 import { useInputStore } from 'src/hooks/useInputStore';
 import InputTemplate from './InputTemplate';
 import { FullInputProps, InputProps } from 'src/typeDeclaration/inputProps';
+import { useComputedExpression } from 'src/hooks/useComputedExpression';
 
 // interface FullDateInputProps {
 //     placeholder: string;
@@ -24,7 +25,7 @@ import { FullInputProps, InputProps } from 'src/typeDeclaration/inputProps';
 // type DateInputProps = Omit<FullDateInputProps, "onInputChange" | "isArrayObject" | "arrayData">
 interface DateProps extends InputProps {
     onDateSelect: (date: string) => {}
-    defaultTodayDate : boolean
+    defaultTodayDate: boolean
     defaultDate: string
 }
 
@@ -33,6 +34,8 @@ const DateInput: FC<DateProps> = ({
     onDateSelect,
     onEnterPress = () => { },
     defaultTodayDate = true,
+    disabled = false,
+    hideElement = false,
     containerStyles = "",
     inputStyles = "",
     placeholderStyles = "",
@@ -59,6 +62,9 @@ const DateInput: FC<DateProps> = ({
             return state.inputData[name!] || initialDate
         }
     )
+    const disabledValue: boolean = useComputedExpression(disabled)
+
+    const hiddenValue: boolean = useComputedExpression(hideElement)
     useEffect(() => {
         // console.log('today date is', todayDate)
         setTimeout(() => {
@@ -75,6 +81,8 @@ const DateInput: FC<DateProps> = ({
                 handleChange={handleDateSelect}
                 onEnterPress={onEnterPress}
                 placeholder={placeholder}
+                disabled={disabledValue}
+                hideElement={hiddenValue}
                 type='date'
                 containerStyles={containerStyles}
                 inputStyles={inputStyles}
