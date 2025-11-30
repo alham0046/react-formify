@@ -1,10 +1,11 @@
-import React, { memo, useEffect, useRef } from 'react'
+import React, { memo, useCallback, useEffect, useRef } from 'react'
 // import { useInputStore } from '../../../Hooks/useInputStore'
 import InputTemplate from './InputTemplate'
 import { useInputStore } from 'src/hooks/useInputStore'
 import { FullInputProps, InputProps } from 'src/typeDeclaration/inputProps';
 import { getNestedValue } from 'src/Utils/inputStoreUtils';
 import { useComputedExpression } from 'src/hooks/useComputedExpression';
+import { useFormInitials } from 'src/hooks/useFormInitialState';
 // import InputTemplate from './InputTemplate'
 
 // interface FullNumInputProps {
@@ -37,6 +38,7 @@ const NumInput: React.FC<NumInputProps> = ({
     privacy = false,
     disabled = false,
     hideElement = false,
+    onDisableChange,
     maxLength,
     inputStyles,
     placeholderStyles,
@@ -67,9 +69,27 @@ const NumInput: React.FC<NumInputProps> = ({
         }
     }
 
+    const handleOnDisableChange = useCallback((value: any) => {
+        useFormInitials({ [name!]: value })
+    }, [name])
+
     const disabledValue: boolean = useComputedExpression(disabled)
 
     const hiddenValue: boolean = useComputedExpression(hideElement)
+
+    useEffect(() => {
+        if (onDisableChange) {
+            const { inputData } = useInputStore.getState()
+            const currentDisabled = getNestedValue(inputData, name)
+            onDisableChange({
+                state: disabledValue,
+                disabledKey: name,
+                disabledValue: currentDisabled,
+                storeValue: inputData,
+                setValue: handleOnDisableChange
+            })
+        }
+    }, [disabledValue])
 
     const prevValueRef = useRef(value)
     useEffect(() => {

@@ -13,6 +13,7 @@ interface FullTemplateProps {
     value: string;
     onSelect: (value: string) => void;
     disabled?: boolean;
+    hideElement?: boolean;
     containerStyles?: string;
     inputStyles?: string;
     placeholderStyles?: string;
@@ -36,6 +37,7 @@ const SelectTemplate: React.FC<TemplateProps> = ({
     value,
     onSelect,
     disabled = false,
+    hideElement = false,
     containerStyles = '',
     inputStyles = '',
     placeholderStyles = '',
@@ -69,7 +71,7 @@ const SelectTemplate: React.FC<TemplateProps> = ({
             // console.log('logging layout')
             setLabelWidth(labelRef.current.offsetWidth);
         }
-    }, []);
+    }, [hideElement]);
     // }, [value, placeholder]);
 
     return (

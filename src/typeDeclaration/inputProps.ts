@@ -12,6 +12,13 @@ export interface FullInputProps {
     onBlur?: (args: { currentValue: string, allData: Record<string, any> }) => void
     name?: string;
     onChange?: (value: string | number, data: string | null) => void
+    onDisableChange?: (args: {
+        state: boolean,
+        disabledKey?: string,
+        disabledValue: any,
+        storeValue: Record<string, any>,
+        setValue: (value: any) => void
+    }) => void
     isArrayObject?: boolean;
     arrayData?: {
         arrayName: string;

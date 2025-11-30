@@ -1,6 +1,6 @@
 const expressionCache = new Map();
 
-export function evalExpression(template : string, deps : string[], store : any, lastComputedValue : any) {
+export function evalExpression(template : string, deps : string[], store : any) {
     let expr = template;
 
     for (let key of deps) {
@@ -11,16 +11,34 @@ export function evalExpression(template : string, deps : string[], store : any, 
     // console.log('evaluating expr:', expr);
 
     try {
-        const result = Function(`"use strict"; return (${expr});`)();
-        lastComputedValue.current = result;
-        // console.log('evaluted result:', result);
-        return result;
-        // return Function(`"use strict"; return (${expr});`)();
+        return Function(`"use strict"; return (${expr});`)();
     } catch (e) {
-        // console.warn("Invalid expression:", expr);
         return false;
     }
 }
+
+
+// export function evalExpression(template : string, deps : string[], store : any, lastComputedValue : any) {
+//     let expr = template;
+
+//     for (let key of deps) {
+//         const value = getByPath(store, key);
+//         expr = expr.replace("${" + key + "}", JSON.stringify(value));
+//     }
+
+//     // console.log('evaluating expr:', expr);
+
+//     try {
+//         const result = Function(`"use strict"; return (${expr});`)();
+//         lastComputedValue.current = result;
+//         // console.log('evaluted result:', result);
+//         return result;
+//         // return Function(`"use strict"; return (${expr});`)();
+//     } catch (e) {
+//         // console.warn("Invalid expression:", expr);
+//         return false;
+//     }
+// }
 
 export function getByPath(obj : any, path : string) {
     return path.split(".").reduce((acc, key) => {

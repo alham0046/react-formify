@@ -1,6 +1,5 @@
 import React, { FC, memo, useCallback, useEffect } from 'react';
 import { useInputStore } from '../hooks/useInputStore';
-import { shallow } from 'zustand/shallow';
 import { camelCase } from 'src/functions/camelCase';
 import { getDynamic } from 'src/functions/makeDynamic';
 import { isEmptyArray } from 'src/functions/dataTypesValidation';

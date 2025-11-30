@@ -1,11 +1,10 @@
 import React, { FC, memo, useCallback, useEffect, useRef } from 'react';
-import { shallow } from "zustand/shallow";
-import { camelCase } from 'src/functions/camelCase';
 import { useInputStore } from 'src/hooks/useInputStore';
 import InputTemplate from './InputTemplate';
 import { FullInputProps, InputProps } from 'src/typeDeclaration/inputProps';
 import { getNestedValue } from 'src/Utils/inputStoreUtils';
 import { useComputedExpression } from 'src/hooks/useComputedExpression';
+import { useFormInitials } from 'src/hooks/useFormInitialState';
 
 
 const StrInput: FC<InputProps> = ({
@@ -13,6 +12,7 @@ const StrInput: FC<InputProps> = ({
     containerStyles = "",
     onEnterPress = () => { },
     onBlur = () => { },
+    onDisableChange,
     maxLength,
     privacy = false,
     disabled = false,
@@ -25,7 +25,7 @@ const StrInput: FC<InputProps> = ({
     ...props
 }) => {
     const fullProps = props as FullInputProps
-    
+
     const value: string = useInputStore(
         (state) => {
             if (fullProps.isArrayObject) {
@@ -38,10 +38,29 @@ const StrInput: FC<InputProps> = ({
             // return state.inputData[name] ?? "";
         }
     );
+    
+    const handleOnDisableChange = useCallback((value: any) => {
+        useFormInitials({ [name!]: value })
+    }, [name])
 
-    const disabledValue : boolean = useComputedExpression(disabled)
+    const disabledValue: boolean = useComputedExpression(disabled)
 
-    const hiddenValue : boolean = useComputedExpression(hideElement)
+    const hiddenValue: boolean = useComputedExpression(hideElement)
+
+
+    useEffect(() => {
+        if (onDisableChange) {
+            const { inputData } = useInputStore.getState()
+            const currentDisabled = getNestedValue(inputData, name)
+            onDisableChange({
+                state: disabledValue,
+                disabledKey: name,
+                disabledValue: currentDisabled,
+                storeValue: inputData,
+                setValue: handleOnDisableChange
+            })
+        }
+    }, [disabledValue])
 
     const prevValueRef = useRef(value)
 

@@ -1,7 +1,5 @@
 import React, { FC, memo, useEffect } from 'react';
-import { shallow } from 'zustand/shallow';
 import { useInputStore } from '../hooks/useInputStore';
-import { camelCase } from 'src/functions/camelCase';
 import InputTemplate from './InputTemplate';
 import { getNestedValue } from 'src/Utils/inputStoreUtils';
 

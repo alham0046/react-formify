@@ -1,9 +1,9 @@
-import React, { FC, memo, useEffect, useMemo, useRef } from 'react';
-import { camelCase } from 'src/functions/camelCase';
+import React, { FC, memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useInputStore } from 'src/hooks/useInputStore';
 import { getNestedValue } from 'src/Utils/inputStoreUtils';
 import SelectTemplate from './SelectTemplate';
 import { useComputedExpression } from 'src/hooks/useComputedExpression';
+import { useFormInitials } from 'src/hooks/useFormInitialState';
 
 interface SelectOption {
     label: string;
@@ -17,6 +17,14 @@ interface FullInputProps {
     initialValue?: string;
     initialLabel?: string
     disabled?: boolean | string
+    hideElement?: boolean | string
+    onDisableChange?: (args: {
+        state: boolean,
+        disabledKey?: string,
+        disabledValue: any,
+        storeValue: Record<string, any>,
+        setValue: (value: any) => void
+    }) => void
     onChange?: (value: string) => void
     onInputChange: (name: string, value: string) => void
     inputStyles?: string
@@ -41,6 +49,8 @@ const SelectInput: FC<SelectProps> = ({
     options,
     onChange = () => { },
     disabled = false,
+    hideElement = false,
+    onDisableChange,
     initialLabel,
     initialValue = '',
     inputStyles = '',
@@ -59,7 +69,27 @@ const SelectInput: FC<SelectProps> = ({
         return getNestedValue(state.inputData, name!) ?? '';
     });
 
+    const handleOnDisableChange = useCallback((value: any) => {
+        useFormInitials({ [name!]: value })
+    }, [name])
+
     const disabledValue: boolean = useComputedExpression(disabled)
+
+    const hiddenValue: boolean = useComputedExpression(hideElement)
+
+    useEffect(() => {
+        if (onDisableChange) {
+            const { inputData } = useInputStore.getState()
+            const currentDisabled = getNestedValue(inputData, name)
+            onDisableChange({
+                state: disabledValue,
+                disabledKey: name,
+                disabledValue: currentDisabled,
+                storeValue: inputData,
+                setValue: handleOnDisableChange
+            })
+        }
+    }, [disabledValue])
 
     const prevValueRef = useRef(value);
 
@@ -88,7 +118,7 @@ const SelectInput: FC<SelectProps> = ({
     };
 
     return (
-        <>
+        <div style={{ display: hiddenValue ? 'none' : 'block' }}>
             {/* {console.log('here is select input is')} */}
             <SelectTemplate
                 name={name!}
@@ -96,13 +126,14 @@ const SelectInput: FC<SelectProps> = ({
                 placeholder={placeholder}
                 options={refinedOption}
                 disabled={disabledValue}
+                hideElement={hiddenValue}
                 onSelect={handleSelect}
                 inputStyles={inputStyles}
                 placeholderStyles={placeholderStyles}
                 containerStyles={containerStyles}
                 {...props}
             />
-        </>
+        </div>
     );
 };
 
