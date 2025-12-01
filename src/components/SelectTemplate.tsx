@@ -1,4 +1,5 @@
 import React, { useRef, useState, useLayoutEffect, useEffect } from 'react';
+import { useInputStore } from 'src/hooks/useInputStore';
 // import { useInputStore } from 'src/hooks/useInputStore';
 
 interface SelectOption {
@@ -44,13 +45,17 @@ const SelectTemplate: React.FC<TemplateProps> = ({
     makeEmptyDisabled = false,
     ...props
 }) => {
+    const setFocusInputKey = useInputStore((state) => state.setCurrentInputKey);
     const containerRef = useRef<HTMLDivElement>(null)
     const labelRef = useRef<any>(null);
     const [labelWidth, setLabelWidth] = useState<number | null>(null);
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleDropdown = () => {
-        if (!disabled) setIsOpen((prev) => !prev);
+        if (!disabled) {
+            setFocusInputKey(name);
+            setIsOpen((prev) => !prev);
+        }
     };
 
     // Close dropdown when clicking outside

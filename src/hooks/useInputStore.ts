@@ -19,7 +19,13 @@ export const useInputStore = create<InputStore>()(
   subscribeWithSelector((set, get) => ({
     inputData: {},
     currentInputKey: null,
-    setCurrentInputKey: (key) => set({ currentInputKey: key }),
+    // setCurrentInputKey: (key) => set({ currentInputKey: key }),
+    setCurrentInputKey: (key) => {
+      set((state) => {
+        if (state.currentInputKey === key) return state
+        return { currentInputKey: key }
+      })
+    },
     setInputValue: (key: string, value: any) =>
       set((state) => {
         const keys = key.split(".");
