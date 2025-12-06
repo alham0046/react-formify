@@ -73,9 +73,9 @@ const NumInput: React.FC<NumInputProps> = ({
         useFormInitials({ [name!]: value })
     }, [name])
 
-    const disabledValue: boolean = useComputedExpression(disabled)
+    const disabledValue: boolean = useComputedExpression(disabled, name!)
 
-    const hiddenValue: boolean = useComputedExpression(hideElement)
+    const hiddenValue: boolean = useComputedExpression(hideElement, name!)
 
     useEffect(() => {
         if (onDisableChange) {

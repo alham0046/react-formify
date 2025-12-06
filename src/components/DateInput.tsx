@@ -62,9 +62,9 @@ const DateInput: FC<DateProps> = ({
             return state.inputData[name!] || initialDate
         }
     )
-    const disabledValue: boolean = useComputedExpression(disabled)
+    const disabledValue: boolean = useComputedExpression(disabled, name!)
 
-    const hiddenValue: boolean = useComputedExpression(hideElement)
+    const hiddenValue: boolean = useComputedExpression(hideElement, name!)
     useEffect(() => {
         // console.log('today date is', todayDate)
         setTimeout(() => {

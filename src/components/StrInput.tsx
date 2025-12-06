@@ -43,9 +43,9 @@ const StrInput: FC<InputProps> = ({
         useFormInitials({ [name!]: value })
     }, [name])
 
-    const disabledValue: boolean = useComputedExpression(disabled)
+    const disabledValue: boolean = useComputedExpression(disabled, name!)
 
-    const hiddenValue: boolean = useComputedExpression(hideElement)
+    const hiddenValue: boolean = useComputedExpression(hideElement, name!)
 
 
     useEffect(() => {

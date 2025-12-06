@@ -6,7 +6,8 @@ import { useInputStore } from "./useInputStore";
  * Hook to subscribe & evaluate any expression-based prop
  * Example: disabled="${age} >= 18 && ${citizen} === true"
  */
-export function useComputedExpression(propValue : string | boolean) {
+export function useComputedExpression(propValue : string | boolean, name: string) {
+    if (name === undefined) return
     const lastComputedRef = useRef<boolean | null>(null)
     // 1) Parse only once
     const parsed = useMemo(() => {
