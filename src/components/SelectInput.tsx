@@ -146,7 +146,10 @@ const SelectInput: FC<SelectProps> = ({
     );
 };
 
-export default memo(SelectInput, (prev, next) => prev.name === next.name);
+// export default memo(SelectInput, (prev, next) => prev.name === next.name);
+const MemoizedSelectInput = memo(SelectInput, (prev, next) => prev.name === next.name)
+MemoizedSelectInput.displayName = 'SelectInput';
+export default MemoizedSelectInput;
 
 
 
