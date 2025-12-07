@@ -63,7 +63,7 @@ const SelectTemplate: React.FC<TemplateProps> = ({
     }, []);
 
     const handleToggleEffect = (isOpen: boolean) => {
-        if (isOpen) {
+        if (!disabled) {
             setFocusInputKey(name);
         }
     }

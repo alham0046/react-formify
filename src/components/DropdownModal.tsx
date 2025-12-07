@@ -3,7 +3,7 @@ import { isEmptyArray } from "src/functions/dataTypesValidation";
 import { useInputStore } from "src/hooks/useInputStore";
 import { StyleProp } from "src/typeDeclaration/stylesProps";
 import { getNestedValue } from "src/Utils/inputStoreUtils";
-import { createPortal } from 'react-dom'
+// import { createPortal } from 'react-dom'
 import { shallowOrDeepEqual } from "src/functions/shallowOrDeepEqual";
 import OptionItem from "./OptionItem";
 
@@ -170,7 +170,7 @@ const DropdownModal: FC<DropdownModalProps> = ({
     const toggleDropdown = () => {
         if (disabled || isEmptyArray(options)) return
         // console.log('inside toggle dropdown', name)
-        onToggleDropdown && onToggleDropdown(isOpen);
+        onToggleDropdown?.(isOpen);
         const newState = !isOpen;
         setIsOpen(newState);
 
@@ -332,7 +332,8 @@ const DropdownModal: FC<DropdownModalProps> = ({
             </svg>
 
             {/* 1. Use createPortal to render the dropdown outside the component's DOM */}
-            {isOpen && portalTarget && createPortal(dropdownPanel, portalTarget)}
+            {isOpen && portalTarget && dropdownPanel}
+            {/* {isOpen && portalTarget && createPortal(dropdownPanel, portalTarget)} */}
         </div>
     )
 }

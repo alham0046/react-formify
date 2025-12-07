@@ -1,4 +1,4 @@
-import React, { FC, memo, ReactNode, useEffect, useMemo } from 'react'
+import React, { FC, memo, ReactNode, RefObject, useMemo } from 'react'
 import { camelCase } from 'src/functions/camelCase';
 import { useInputStore } from 'src/hooks/useInputStore';
 import { flattenChildren } from 'src/Utils/flattenChildren';
@@ -9,6 +9,7 @@ interface FullProps {
     onInputChange: (name: string, value: any) => void;
     sharedStyles : string
     bgColor : string
+    modalContainerRef: RefObject<HTMLDivElement>
 }
 
 interface ObjContainerProps {
@@ -57,7 +58,8 @@ const ObjectContainer: FC<ObjContainerProps> = ({
                             onInputChange: handleInputChange,
                             name: changedName,
                             sharedStyles : fullProps.sharedStyles,
-                            bgColor : fullProps.bgColor
+                            bgColor : fullProps.bgColor,
+                            modalContainerRef: fullProps.modalContainerRef,
                             // ...props
                             // isArray : isChildArray
                         })

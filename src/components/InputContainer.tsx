@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import React, { FC, ReactNode, RefObject, useEffect, useMemo, useRef, useState } from 'react'
 import { memo } from 'react'
 import { useInputStore } from '../hooks/useInputStore'
 import { camelCase } from 'src/functions/camelCase';
@@ -14,6 +14,7 @@ interface InputContainerProps {
     inputStyles?: string
     [key: string]: any
   }
+  modalContainerRef?: RefObject<HTMLDivElement>
 }
 
 interface InputChildProps {
@@ -21,7 +22,7 @@ interface InputChildProps {
   [key: string]: any; // optional if child has more props
 }
 
-const InputContainer: FC<InputContainerProps> = ({ children, inputContainerStyles, sharedStyles }) => {
+const InputContainer: FC<InputContainerProps> = ({ children, inputContainerStyles, sharedStyles, modalContainerRef }) => {
   const setInputValue = useInputStore((state) => state.setInputValue)
 
   const containerRef = useRef<HTMLDivElement | null>(null)
@@ -43,7 +44,6 @@ const InputContainer: FC<InputContainerProps> = ({ children, inputContainerStyle
         const style = window.getComputedStyle(current);
         // const bg = style.backgroundColor;
         backgroundColor = style.backgroundColor;
-
         if (backgroundColor && backgroundColor !== 'rgba(0, 0, 0, 0)' && backgroundColor !== 'transparent') {
           // backgroundColor = bg
           break; // found non-transparent background
@@ -79,7 +79,8 @@ const InputContainer: FC<InputContainerProps> = ({ children, inputContainerStyle
               onInputChange: handleInputChange,
               name: modifiedName,
               sharedStyles,
-              bgColor
+              bgColor,
+              modalContainerRef
             })
           }
           return child
