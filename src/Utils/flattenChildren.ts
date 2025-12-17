@@ -5,7 +5,7 @@ interface InputChildProps {
   [key: string]: any; // optional if child has more props
 }
 
-const CustomComponents : string[] = ["StrInput", "NumInput", "SelectInput", "DisabledInput", "AutoInput", "SubmitButton", "ObjectContainer"]
+const CustomComponents : string[] = ["StrInput", "NumInput", "SelectInput", "DisabledInput", "AutoInput", "SubmitButton", "ObjectContainer", "ArrayInput", "DateInput"]
 
 export const flattenChildren = (children: ReactNode) => {
     const result: React.ReactElement[] = [];

@@ -66,7 +66,11 @@ const ArrayInput: FC<ArrayInputProps> = ({ children, name, data = [], containerS
     );
 };
 
-export default memo(ArrayInput);
+const memoizedArrayInput = memo(ArrayInput)
+memoizedArrayInput.displayName = 'ArrayInput'
+export default memoizedArrayInput
+
+// export default memo(ArrayInput);
 
 {/* {children} */ }
 {/* {

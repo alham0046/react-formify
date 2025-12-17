@@ -93,7 +93,11 @@ const DateInput: FC<DateProps> = ({
     );
 };
 
-export default memo(DateInput);
+const memoizedDateInput = memo(DateInput)
+memoizedDateInput.displayName = 'DateInput'
+export default memoizedDateInput
+
+// export default memo(DateInput);
 {/* <div className="relative w-full group border-2 rounded-lg">
     <input
         type="date"
