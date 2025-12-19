@@ -9,7 +9,7 @@ type SubmitData = {
 };
 
 // Define the exact type signature for the handler function
-export type SubmitHandler = (args: SubmitData) => void;
+export type SubmitHandler = (args: SubmitData) => Promise<boolean | void>;
 
 export interface ConfirmationRenderProps {
   success: (data?: any) => void
@@ -40,8 +40,8 @@ interface SubmitProps {
   modal?: {
     modalStyle?: { height?: string | number, width?: string | number }
     renderConfirmationModel?: ((props: ConfirmationRenderProps) => ReactNode) | ReactElement<ConfirmationRenderProps>
-    isDisabled? : boolean
-    onConfirm?: (data : any) => void
+    isDisabled?: boolean
+    onConfirm?: (data: any) => void
   }
 }
 
@@ -53,7 +53,7 @@ const SubmitButton: React.FC<SubmitProps> = ({
   onClick,
   modal,
 }) => {
-  const {isDisabled = false , modalStyle, onConfirm, renderConfirmationModel} = modal || {}
+  const { isDisabled = false, modalStyle, onConfirm, renderConfirmationModel } = modal || {}
   // const { height, width } = modal.modelStyle
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [modelData, setModelData] = useState<Record<string, any> | null>(null)
@@ -67,15 +67,30 @@ const SubmitButton: React.FC<SubmitProps> = ({
     setOpenModal(false)
   }
   const resetForm = useResetForm()
-  const handleSubmit = useCallback(() => {
-    if (renderConfirmationModel) setOpenModal(true)
+  const handleSubmit = useCallback(async () => {
+    if (disabled || openModal) return
+    // if (renderConfirmationModel) setOpenModal(true)
     const { inputData: data } = useInputStore.getState()
-    // console.log('the submit is', data)
-    onClick && onClick({ data, resetForm })
     setModelData(data)
-  }, [onClick])
+
+    // 🔹 CASE 1: No onClick → open modal directly
+    if (!onClick && renderConfirmationModel) {
+      setOpenModal(true)
+      return
+    }
+    // console.log('the submit is', data)
+    // onClick && onClick({ data, resetForm })
+    // 🔹 CASE 2 & 3: onClick exists
+    if (onClick) {
+      const shouldOpenModal = await onClick({ data, resetForm })
+
+      if (shouldOpenModal && renderConfirmationModel) {
+        setOpenModal(true)
+      }
+    }
+  }, [onClick, disabled, openModal, renderConfirmationModel])
   return (
-    <div className={`${className}`} onClick={!disabled && !openModal ? handleSubmit : undefined}>
+    <div className={`${className}`} onClick={handleSubmit}>
       {children}
       {
         openModal ? (
@@ -88,9 +103,9 @@ const SubmitButton: React.FC<SubmitProps> = ({
             >
               <div className=''>
                 {typeof renderConfirmationModel === 'function'
-                  ? renderConfirmationModel({ cancel, success, resetForm, data : modelData, isDisabled })
+                  ? renderConfirmationModel({ cancel, success, resetForm, data: modelData, isDisabled })
                   : React.isValidElement(renderConfirmationModel)
-                    ? React.cloneElement(renderConfirmationModel, { cancel, success, resetForm , data : modelData, isDisabled })
+                    ? React.cloneElement(renderConfirmationModel, { cancel, success, resetForm, data: modelData, isDisabled })
                     : null}
               </div>
             </div>
