@@ -1,4 +1,4 @@
-import React, { memo, ReactElement, ReactNode, useCallback, useEffect, useState } from 'react'
+import React, { forwardRef, memo, ReactElement, ReactNode, useCallback, useEffect, useImperativeHandle, useState } from 'react'
 import { useInputStore } from '../hooks/useInputStore';
 import { useResetForm } from 'src/hooks/useResetForm';
 
@@ -18,6 +18,11 @@ export interface ConfirmationRenderProps {
   isDisabled?: boolean
   resetForm: () => void
 }
+
+export interface SubmitButtonRef {
+  submit: () => void
+}
+
 
 interface SubmitProps {
   children: ReactNode
@@ -45,23 +50,26 @@ interface SubmitProps {
   }
 }
 
-const SubmitButton: React.FC<SubmitProps> = ({
-  children,
-  className,
-  closeModal,
-  disabled = false,
-  onClick,
-  modal,
-}) => {
+const SubmitButton = forwardRef<SubmitButtonRef, SubmitProps>((
+  {
+    children,
+    className,
+    closeModal,
+    disabled = false,
+    onClick,
+    modal,
+  },
+  ref
+) => {
   const { isDisabled = false, modalStyle, onConfirm, renderConfirmationModel } = modal || {}
   // const { height, width } = modal.modelStyle
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [modelData, setModelData] = useState<Record<string, any> | null>(null)
   const success = (data?: any) => {
-    onConfirm && onConfirm(data)
+    onConfirm?.(data)
     setOpenModal(false)
     resetForm()
-    closeModal && closeModal()
+    closeModal?.()
   }
   const cancel = () => {
     setOpenModal(false)
@@ -89,6 +97,12 @@ const SubmitButton: React.FC<SubmitProps> = ({
       }
     }
   }, [onClick, disabled, openModal, renderConfirmationModel])
+
+  // 🔑 Expose submit() safely
+  useImperativeHandle(ref, () => ({
+    submit: handleSubmit
+  }), [handleSubmit])
+
   return (
     <div className={`${className}`} onClick={handleSubmit}>
       {children}
@@ -114,7 +128,7 @@ const SubmitButton: React.FC<SubmitProps> = ({
       }
     </div>
   )
-}
+})
 
 // 1. Export the memoized component
 const MemoizedSubmitButton = memo(SubmitButton)

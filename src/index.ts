@@ -7,7 +7,7 @@ export {default as SelectInput} from './components/SelectInput'
 export { default as AutoInput } from './components/AutoInput'
 export { default as DateInput } from './components/DateInput'
 export { default as DisabledInput } from './components/DisabledInput';
-export { default as SubmitButton, ConfirmationRenderProps, SubmitHandler } from './components/SubmitButton';
+export { default as SubmitButton, ConfirmationRenderProps, SubmitHandler, SubmitButtonRef } from './components/SubmitButton';
 export { default as InputContainer } from './components/InputContainer';
 export { useInputStore } from './hooks/useInputStore';
 export { useFormInitials } from './hooks/useFormInitialState';
