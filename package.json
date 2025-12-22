@@ -1,6 +1,6 @@
 {
     "name": "react-formify",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "description": "Reusable Zustand-based input kit for React forms.",
     "main": "dist/index.js",
     "module": "dist/index.mjs",
