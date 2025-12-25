@@ -1,10 +1,12 @@
 import React, { forwardRef, memo, ReactElement, ReactNode, useCallback, useEffect, useImperativeHandle, useState } from 'react'
 import { useInputStore } from '../hooks/useInputStore';
 import { useResetForm } from 'src/hooks/useResetForm';
+import { getEditedData } from 'src/Utils/getEditedData';
 
 // Define the arguments object for clarity
 type SubmitData = {
   data: Record<string, any>;
+  edited: Record<string, any> | null;
   resetForm: () => void;
 };
 
@@ -78,7 +80,8 @@ const SubmitButton = forwardRef<SubmitButtonRef, SubmitProps>((
   const handleSubmit = useCallback(async () => {
     if (disabled || openModal) return
     // if (renderConfirmationModel) setOpenModal(true)
-    const { inputData: data } = useInputStore.getState()
+    // const { inputData: data } = useInputStore.getState()
+    const { data, edited } = getEditedData()
     setModelData(data)
 
     // 🔹 CASE 1: No onClick → open modal directly
@@ -90,7 +93,7 @@ const SubmitButton = forwardRef<SubmitButtonRef, SubmitProps>((
     // onClick && onClick({ data, resetForm })
     // 🔹 CASE 2 & 3: onClick exists
     if (onClick) {
-      const shouldOpenModal = await onClick({ data, resetForm })
+      const shouldOpenModal = await onClick({ data, edited, resetForm })
 
       if (shouldOpenModal && renderConfirmationModel) {
         setOpenModal(true)

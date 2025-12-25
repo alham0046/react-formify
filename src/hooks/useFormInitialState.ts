@@ -1,6 +1,6 @@
 import { useInputStore } from "./useInputStore"
 
-interface InitialState {
+export interface InitialState {
     [key: string]: any;
 }
 
