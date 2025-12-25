@@ -73,7 +73,7 @@ export const useInputStore = create<InputStore>()(
     })),
     resetInput: (keys) =>
       set((state) => {
-        if (!keys) return { inputData: {} }
+        if (!keys) return { inputData: {}, editedKeys: null, initialData: null }
 
         const newInputData = { ...state.inputData }
         if (isArray(keys)) {
